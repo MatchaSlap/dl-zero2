@@ -35,7 +35,7 @@ class AttentionWeight:
 
     def forward(self, hs, h):
         N, T, H = hs.shape
-        hr = h.reshape(N,1,H, axis=1)
+        hr = h.reshape(N,1,H).repeat(T, axis=1)
         t = hs * hr
         s = np.sum(t, axis=2)
         a = self.softmax.forward(s)
@@ -61,17 +61,17 @@ class Attention:
         self.weight_sum_layer = WeightSum()
         self.attention_weight = None
 
-        def forward(self, hs, h):
-            a = self.attention_weight_layer.forward(hs, h)
-            out = self.weight_sum_layer.forward(hs, a)
-            self.attention_weight = a
-            return out
+    def forward(self, hs, h):
+        a = self.attention_weight_layer.forward(hs, h)
+        out = self.weight_sum_layer.forward(hs, a)
+        self.attention_weight = a
+        return out
 
-        def backward(self, dout):
-            dhs0, da = self.weight_sum_layer.backward(dout)
-            dhs1, dh = self.attention_weight_layer.backward(da)
-            dhs = dhs0 + dhs1
-            return dhs, dh
+    def backward(self, dout):
+        dhs0, da = self.weight_sum_layer.backward(dout)
+        dhs1, dh = self.attention_weight_layer.backward(da)
+        dhs = dhs0 + dhs1
+        return dhs, dh
 
 class TimeAttention:
     def __init__(self):
