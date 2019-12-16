@@ -91,7 +91,7 @@ smart-open==1.8.0
 soupsieve==1.7.3
 tb-nightly==1.14.0a20190504
 tensorboard==1.12.2
-tensorflow==1.12.0
+tensorflow==1.15.0
 tensorflow-estimator==1.13.0
 termcolor==1.1.0
 terminado==0.8.1
